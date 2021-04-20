@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for messages in messages %}
+<div class="alert alert-danger mt-4"> {{messages}} </div>
+{% endfor %}
+
+<h2>Daftar Buku</h2>
+<a href="/tambah-buku" class="mb-2 btn btn-primary">Tambah Buku</a>
+<a href="{% url 'export_xls' %}" class="mb-2 btn btn-success">Export .xls</a>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Cover</th>
+          <th>Judul</th>
+          <th>Penulis</th>
+          <th>Penerbit</th>
+          <th>Jumlah</th>
+          <th>Kelompok</th>
+          <th style="text-align: center;">Aksi</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for buku in books %}
+        <tr>
+          <td>
+
+            {% if buku.cover %}
+            <img src="{{ buku.cover.url }}" alt="" width="90px">
+            {% endif %}
+
+          </td>
+          <td> <a href="{% url 'ubah_buku' buku.id %}">{{buku.judul}}</a> </td>
+          <td> {{buku.penulis}} </td>
+          <td> {{buku.penerbit}} </td>
+          <td> {{buku.jumlah}} </td>
+          <td> {{buku.kelompok_id}} </td>
+          <td style="text-align: center;">
+            <button class="btn btn-danger" data-toggle="modal" data-target="#hapus-{{ buku.id }}">Hapus</button>
+          </td>
+
+          <div class="modal fade" id="hapus-{{ buku.id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel"> Hapus </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  Apakah kamu yakin menghapus buku <b>{{buku.judul}}</b>?
+                </div>
+                <div class="modal-footer">
+                  <a href="{% url 'hapus_buku' buku.id %}" class="btn btn-primary">Ya, hapus saja</a>
+
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Tidak</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+{% endblock %}
